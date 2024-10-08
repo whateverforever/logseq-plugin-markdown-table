@@ -44,12 +44,22 @@ const TableEditor = ({ content = DEFAULT_TABLE, className = '' }, ref) => {
     () => ({
       getEditorValue: () => value,
       onKeydown: (code) => {
-        const isFocused = ReactEditor.isFocused(editor)
-        if (!isFocused) return
-        if (code === 'Tab') {
-          tableUtil.edit('cursor-next')
-        } else if (code === 'ShiftTab') {
-          tableUtil.edit('cursor-prev')
+        if (!ReactEditor.isFocused(editor))
+          return
+
+        switch (code) {
+          case 'Tab':
+            tableUtil.edit('cursor-next')
+            break
+          case 'ShiftTab':
+            tableUtil.edit('cursor-prev')
+            break
+          case 'ArrowUp':
+            tableUtil.edit('cursor-up')
+            break
+          case 'ArrowDown':
+            tableUtil.edit('cursor-down')
+            break
         }
       },
     }),
