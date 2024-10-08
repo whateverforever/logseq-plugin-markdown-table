@@ -13,15 +13,29 @@ export const stringToSlateValue = (str = '') => {
 }
 
 export const slateValueToString = (slateVal) => {
+  // Calculate the maximum width for each column
+  const columnWidths = slateVal.children[0].children.map((_, colIndex) => {
+    return Math.max(...slateVal.children.map(row => 
+      row.children[colIndex].children[0].text?.replaceAll('\n', '[:br]').length || 0
+    ));
+  });
+  console.log('Debug: Column widths:', columnWidths);
+
   let rowStrs = Array.from(slateVal.children, (row) => {
-    const cells = Array.from(row.children, (cell) => {
-      // 将换行符替换为 [:br]
-      return cell.children[0].text?.replaceAll('\n', '[:br]')
-    }).join('|')
-    return `|${cells}|`
-  })
-  rowStrs.splice(1, 0, `|${Array.from(slateVal.children[0].children, () => '--').join('|')}|`)
-  return rowStrs.join('\n')
+    const cells = Array.from(row.children, (cell, index) => {
+      const cellText = cell.children[0].text?.replaceAll('\n', '[:br]') || '';
+      return cellText.padEnd(columnWidths[index]);
+    }).join(' | ');
+    return `| ${cells} |`;
+  });
+
+  // Create the separator row
+  const separatorRow = `| ${columnWidths.map(width => '-'.repeat(width)).join(' | ')} |`;
+  rowStrs.splice(1, 0, separatorRow);
+
+  // Add the preamble
+  const preamble = '#+attr_html: :class monospace-table';
+  return `${preamble}\n${rowStrs.join('\n')}`;
 }
 
 const createRow = (cellText) => {
