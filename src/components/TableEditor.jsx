@@ -25,62 +25,7 @@ const Element = props => {
 }
 
 const TableEditor = ({ content = DEFAULT_TABLE, className = '' }, ref) => {
-  // const [value, setValue] = useState([
-  //   // {
-  //   //   type: 'paragaph',
-  //   //   children: [{ text: 'First line of text in Slate JS. ' }],
-  //   // },
-    // {
-    //   type: 'table',
-    //   children: [
-    //     {
-    //       type: 'table-row',
-    //       children: [
-    //         {
-    //           type: 'table-cell',
-    //           children: [
-    //             {
-    //               text: 'title1',
-    //             }
-    //           ]
-    //         },
-    //         {
-    //           type: 'table-cell',
-    //           children: [
-    //             {
-    //               text: 'title2',
-    //             }
-    //           ]
-    //         },
-    //       ]
-    //     },
-    //     {
-    //       type: 'table-row',
-    //       children: [
-    //         {
-    //           type: 'table-cell',
-    //           children: [
-    //             {
-    //               text: 'content1',
-    //             }
-    //           ]
-    //         },
-    //         {
-    //           type: 'table-cell',
-    //           children: [
-    //             {
-    //               text: 'content2',
-    //             }
-    //           ]
-    //         },
-    //       ]
-    //     },
-    //   ]
-    // }
-  // ])
-  // console.log('[faiz:] === tableEditor input: \n', content)
   const [value, setValue] = useState([stringToSlateValue(content)])
-  // console.log('[faiz:] === tableEditor format to Slate Editor Node: ', stringToSlateValue(content))
 
   const editor = useMemo(() => withTables(withReact(createEditor())), [])
   const tableUtil = useMemo(() => new TableUtil(editor), [editor])
