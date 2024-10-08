@@ -7,7 +7,7 @@ export const stringToSlateValue = (str = '') => {
   const contentArr = [_arr[0]].concat(_arr.slice(2))
   const res = contentArr.map(rowStr => {
     const rowArr = rowStr.trim().split('|')
-    return rowArr.slice(1, rowArr.length - 1)
+    return rowArr.slice(1, rowArr.length - 1).map(cell => cell.trim())
   })
   return createTableNode(res)
 }
