@@ -15,6 +15,8 @@ const Element = props => {
       return (<table>
         <tbody {...attributes}>{children}</tbody>
       </table>)
+    case 'table-header':
+      return <th {...attributes}>{children}</th>
     case 'table-row':
       return <tr {...attributes}>{children}</tr>
     case 'table-cell':

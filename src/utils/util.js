@@ -15,11 +15,10 @@ export const stringToSlateValue = (str = '') => {
 export const slateValueToString = (slateVal) => {
   // Calculate the maximum width for each column
   const columnWidths = slateVal.children[0].children.map((_, colIndex) => {
-    return Math.max(...slateVal.children.map(row => 
+    return Math.max(...slateVal.children.map(row =>
       row.children[colIndex].children[0].text?.replaceAll('\n', '[:br]').length || 0
     ));
   });
-  console.log('Debug: Column widths:', columnWidths);
 
   let rowStrs = Array.from(slateVal.children, (row) => {
     const cells = Array.from(row.children, (cell, index) => {
@@ -33,28 +32,40 @@ export const slateValueToString = (slateVal) => {
   const separatorRow = `| ${columnWidths.map(width => '-'.repeat(width)).join(' | ')} |`;
   rowStrs.splice(1, 0, separatorRow);
 
-  // Add the preamble
-  const preamble = '#+attr_html: :class monospace-table';
-  return `${preamble}\n${rowStrs.join('\n')}`;
+  return rowStrs.join('\n');
 }
 
-const createRow = (cellText) => {
-  const newRow = Array.from(cellText, (value) => createTableCell(value))
+export const createTableNode = (rows) => {
+  return {
+    type: "table",
+    children: [createHeaderRow(rows[0])].concat(rows.slice(1).map(createRow))
+  };
+}
+
+const createRow = (rowCells) => {
   return {
     type: "table-row",
-    children: newRow
+    children: rowCells.map(createTableCell)
   }
 }
 
-const createTableCell = (text) => {
+const createHeaderRow = (rowCells) => {
+  return {
+    type: "table-row",
+    children: rowCells.map(createHeaderCell)
+  }
+}
+
+const createHeaderCell = (cellText) => {
+  return {
+    type: "table-header",
+    children: [{ text: cellText }]
+  }
+}
+
+const createTableCell = (cellText) => {
   return {
     type: "table-cell",
-    children: [{ text }]
+    children: [{ text: cellText }]
   }
-}
-
-export const createTableNode = (cellText) => {
-  const tableChildren = Array.from(cellText, (value) => createRow(value))
-  let tableNode = { type: "table", children: tableChildren }
-  return tableNode
 }
